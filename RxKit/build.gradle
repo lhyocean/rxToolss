@@ -1,0 +1,88 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.greenrobot.greendao'
+//apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'com.jfrog.bintray'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.2.3"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+
+}
+
+//task to delete the old jar
+//task deleteOldJar(type: Delete) {
+//    delete 'release/AndroidPlugin.jar'
+//}
+//
+////task to export contents as jar
+//task exportJar(type: Copy) {
+//    from('build/intermediates/bundles/release/')
+//    into('release/')
+//    include('classes.jar')
+//    ///Rename the jar
+//    rename('classes.jar', 'AndroidPlugin.jar')
+//}
+//
+//exportJar.dependsOn(deleteOldJar, build)
+
+task makeJar(type: Jar) {
+    delete 'build/libs/rxkit.jar'
+    from('build/intermediates/classes/debug')
+    exclude "**/**/BuildConfig.class"
+    exclude "**/**/BuildConfig\$*.class"
+    exclude "**/R.class"
+    exclude "**/R\$*.class"
+    archiveName = 'rxkit.jar'
+}
+
+makeJar.dependsOn(build)
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    //design包
+    compileOnly 'com.android.support:design:27.1.1'
+
+    //appcompat包
+    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+
+    //cardView包
+    compileOnly 'com.android.support:cardview-v7:27.1.1'
+    //recyclerview包
+    compileOnly 'com.android.support:recyclerview-v7:27.1.1'
+    compileOnly 'com.android.support:support-annotations:27.1.1'
+    compileOnly 'com.android.support.constraint:constraint-layout:1.1.3'
+    //流式布局
+    compileOnly 'com.google.android:flexbox:0.3.2'
+    //沉浸式
+    compileOnly 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+
+    //Log日志格式美化包
+    compileOnly 'com.orhanobut:logger:2.2.0'
+
+    //压缩与加密
+    implementation 'net.lingala.zip4j:zip4j:1.3.2'
+
+    compileOnly 'org.greenrobot:greendao:3.2.2'
+}
